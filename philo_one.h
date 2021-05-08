@@ -11,9 +11,13 @@ typedef struct s_phil
 {
 	int	id;
 	struct timeval start_time;
-
+	struct timeval snack_time;
 	pthread_mutex_t *right;
 	pthread_mutex_t *left;
+	int time_to_eat;
+	int time_to_sleep;
+	int number_to_eat;
+	pthread_mutex_t *mut_chat;
 }				t_phil;
 
 typedef struct s_all
@@ -23,6 +27,11 @@ typedef struct s_all
 	t_phil **phil;
 	struct timeval start_time;
 	int		number_of_phil;
+	int	time_to_die;
+	int time_to_eat;
+	int time_to_sleep;
+	int number_to_eat;
+	pthread_mutex_t mut_chat;
 }				t_all;
 
 
