@@ -1,28 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   life.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dquordle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/13 12:53:58 by dquordle          #+#    #+#             */
+/*   Updated: 2021/05/13 12:54:00 by dquordle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo_one.h"
 
 void	ft_eat(t_phil *phil)
 {
-	struct timeval time;
+	struct timeval	time;
 
 	pthread_mutex_lock(phil->left);
 	gettimeofday(&time, 0);
 	pthread_mutex_lock(phil->mut_chat);
-	printf("%ld : philo #%d has taken a fork\n", get_time(time, phil->start_time), phil->id);
+	printf("%ld : philo #%d has taken a fork\n",
+		get_time(time, phil->start_time), phil->id);
 	pthread_mutex_unlock(phil->mut_chat);
 	pthread_mutex_lock(phil->right);
 	gettimeofday(&time, 0);
 	pthread_mutex_lock(phil->mut_chat);
 	phil->snack_time = time;
-	printf("%ld : philo #%d has taken a fork\n", get_time(time, phil->start_time), phil->id);
-	printf("%ld : philo #%d is eating\n", get_time(time, phil->start_time), phil->id);
+	printf("%ld : philo #%d has taken a fork\n",
+		get_time(time, phil->start_time), phil->id);
+	printf("%ld : philo #%d is eating\n",
+		get_time(time, phil->start_time), phil->id);
 	pthread_mutex_unlock(phil->mut_chat);
 	my_usleep(phil->time_to_eat);
 }
 
 void	*life(t_phil *phil)
 {
-	struct timeval time;
-	int eaten;
+	struct timeval	time;
+	int				eaten;
 
 	my_usleep(((phil->id - 1) % 2) * 200);
 	eaten = 0;
@@ -34,21 +49,23 @@ void	*life(t_phil *phil)
 			phil->full = 1;
 		gettimeofday(&time, 0);
 		pthread_mutex_lock(phil->mut_chat);
-		printf("%ld : philo #%d is sleeping\n",get_time(time, phil->start_time), phil->id);
+		printf("%ld : philo #%d is sleeping\n",
+			get_time(time, phil->start_time), phil->id);
 		pthread_mutex_unlock(phil->mut_chat);
 		pthread_mutex_unlock(phil->left);
 		pthread_mutex_unlock(phil->right);
 		my_usleep(phil->time_to_sleep);
 		gettimeofday(&time, 0);
 		pthread_mutex_lock(phil->mut_chat);
-		printf("%ld : philo #%d is thinking\n", get_time(time, phil->start_time), phil->id);
+		printf("%ld : philo #%d is thinking\n",
+			get_time(time, phil->start_time), phil->id);
 		pthread_mutex_unlock(phil->mut_chat);
 	}
 }
 
 void	ft_create_thread(t_all *all, int num)
 {
-	t_phil *phil;
+	t_phil	*phil;
 
 	phil = (t_phil *)malloc(sizeof(t_phil));
 	phil->id = num;
@@ -68,11 +85,11 @@ void	ft_create_thread(t_all *all, int num)
 	pthread_create(&(all->thread[num - 1]), NULL, (void *)life, phil);
 }
 
-int ft_setup_all(t_all *all, int argc, char **argv)
+int	ft_setup_all(t_all *all, int argc, char **argv)
 {
-	int check;
-	int i;
-	int num;
+	int	check;
+	int	i;
+	int	num;
 
 	check = 1;
 	i = 1;
@@ -95,11 +112,11 @@ int ft_setup_all(t_all *all, int argc, char **argv)
 	return (0);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_all *all;
-	int i;
-	pthread_t thread_d;
+	t_all		*all;
+	int			i;
+	pthread_t	thread_d;
 
 	if (argc < 5 || argc > 6)
 		return (ft_error());
@@ -113,7 +130,6 @@ int main(int argc, char **argv)
 	i = -1;
 	while (++i < all->number_of_phil)
 		ft_create_thread(all, i + 1);
-	my_usleep(100);
 	pthread_create(&thread_d, NULL, (void *)ft_check_death, all);
 	pthread_join(thread_d, NULL);
 	ft_freedom(&all);

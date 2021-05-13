@@ -5,42 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dquordle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 12:53:33 by dquordle          #+#    #+#             */
-/*   Updated: 2021/05/13 12:53:35 by dquordle         ###   ########.fr       */
+/*   Created: 2021/05/13 13:16:24 by dquordle          #+#    #+#             */
+/*   Updated: 2021/05/13 13:16:26 by dquordle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
-
-void	*ft_death(long int time, int num)
-{
-	printf("%ld : philo #%d died\n", time, num);
-	return (NULL);
-}
+#include "philo_three.h"
 
 void	*ft_check_death(t_all *all)
 {
 	struct timeval	time;
-	int				i;
-	int				full_phil;
 
 	while (1)
 	{
-		full_phil = 0;
-		i = -1;
+		sem_wait(all->chat);
 		gettimeofday(&time, 0);
-		while (++i < all->number_of_phil)
+		if (get_time(time, all->snack_time) >= all->time_to_die)
 		{
-			pthread_mutex_lock(&all->mut_chat);
-			if (get_time(time, all->phil[i]->snack_time) >= all->time_to_die)
-				return (ft_death(get_time(time, all->start_time), i + 1));
-			pthread_mutex_unlock(&all->mut_chat);
-			full_phil += all->phil[i]->full;
+			printf("%ld : philo #%d died\n",
+				get_time(time, all->start_time), all->id);
+			sem_post(all->plague);
+			sem_post(all->chat);
+			exit(0);
 		}
-		if (full_phil == all->number_of_phil)
-		{
-			pthread_mutex_lock(&all->mut_chat);
-			return (NULL);
-		}
+		sem_post(all->chat);
 	}
 }

@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dquordle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 12:54:09 by dquordle          #+#    #+#             */
-/*   Updated: 2021/05/13 12:54:11 by dquordle         ###   ########.fr       */
+/*   Created: 2021/05/13 13:16:14 by dquordle          #+#    #+#             */
+/*   Updated: 2021/05/13 13:16:16 by dquordle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_three.h"
 
 long int	get_time(struct timeval time, struct timeval start_time)
 {
@@ -39,19 +39,19 @@ void	my_usleep(int time_sleep)
 int	ft_error(void)
 {
 	printf("Error\n");
-	return (-1);
+	exit(1);
 }
 
 void	ft_freedom(t_all **all)
 {
-	int	i;
-
-	free((*all)->thread);
-	free((*all)->mutex);
-	i = 0;
-	while (i < (*all)->number_of_phil)
-		free((*all)->phil[i++]);
-	free((*all)->phil);
+	sem_close((*all)->plague);
+	sem_close((*all)->full);
+	sem_close((*all)->forks);
+	sem_close((*all)->chat);
+	sem_unlink("forks");
+	sem_unlink("full");
+	sem_unlink("plague");
+	sem_unlink("chat");
 	free(*all);
 }
 

@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dquordle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 12:53:33 by dquordle          #+#    #+#             */
-/*   Updated: 2021/05/13 12:53:35 by dquordle         ###   ########.fr       */
+/*   Created: 2021/05/13 13:08:44 by dquordle          #+#    #+#             */
+/*   Updated: 2021/05/13 13:08:46 by dquordle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 void	*ft_death(long int time, int num)
 {
@@ -31,15 +31,15 @@ void	*ft_check_death(t_all *all)
 		gettimeofday(&time, 0);
 		while (++i < all->number_of_phil)
 		{
-			pthread_mutex_lock(&all->mut_chat);
+			sem_wait(all->chat);
 			if (get_time(time, all->phil[i]->snack_time) >= all->time_to_die)
 				return (ft_death(get_time(time, all->start_time), i + 1));
-			pthread_mutex_unlock(&all->mut_chat);
+			sem_post(all->chat);
 			full_phil += all->phil[i]->full;
 		}
 		if (full_phil == all->number_of_phil)
 		{
-			pthread_mutex_lock(&all->mut_chat);
+			sem_wait(all->chat);
 			return (NULL);
 		}
 	}

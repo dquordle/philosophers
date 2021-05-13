@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dquordle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 12:54:09 by dquordle          #+#    #+#             */
-/*   Updated: 2021/05/13 12:54:11 by dquordle         ###   ########.fr       */
+/*   Created: 2021/05/13 13:09:06 by dquordle          #+#    #+#             */
+/*   Updated: 2021/05/13 13:09:07 by dquordle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 long int	get_time(struct timeval time, struct timeval start_time)
 {
@@ -47,11 +47,12 @@ void	ft_freedom(t_all **all)
 	int	i;
 
 	free((*all)->thread);
-	free((*all)->mutex);
 	i = 0;
 	while (i < (*all)->number_of_phil)
 		free((*all)->phil[i++]);
 	free((*all)->phil);
+	sem_unlink("forks");
+	sem_unlink("chat");
 	free(*all);
 }
 
