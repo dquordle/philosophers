@@ -68,7 +68,7 @@ void	*life(t_all *phil)
 
 	pthread_create(&thread_d, NULL, (void *)ft_check_death, phil);
 	pthread_create(&code_red, NULL, (void *)ft_selfdestruction, phil);
-	my_usleep(((phil->id - 1) % 2) * 200);
+	usleep(((phil->id - 1) % 2) * 200);
 	eaten = 0;
 	while (1)
 	{

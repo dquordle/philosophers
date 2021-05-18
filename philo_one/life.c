@@ -39,7 +39,7 @@ void	*life(t_phil *phil)
 	struct timeval	time;
 	int				eaten;
 
-	my_usleep(((phil->id - 1) % 2) * 200);
+	usleep(((phil->id - 1) % 2) * 200);
 	eaten = 0;
 	while (1)
 	{
